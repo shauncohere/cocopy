@@ -119,7 +119,9 @@ if submitted:
         generated=max_likely(generated)
         generated=generated.replace("----", "")
         all_gens.add(generated)
-    st.write(all_gens)
+    for gen in all_gens:
+        st.write(gen)
+
 
 
 
