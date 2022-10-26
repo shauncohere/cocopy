@@ -70,40 +70,7 @@ def strip_formating_from_string(string):
     string = string.replace("---", "")
     return string
 
-def recipe_generator(use_case,meal,theme,request,level):
-    st.write("Generating recipe...")
-    with open('app/seeds/recipe_seed_dietary_restrictions.txt') as f:
-        example = f.read()
-    prompt = example +  "Difficulty Level: " + level + "\nTheme:" + theme + "\nSpecial Request: " + request + "\nMeal: " + meal
-    predictions = generate(prompt=prompt, model_size="xlarge",tokens=500,temp=.9, stops=["---"])
-    prediction= max_likely(predictions)
-    return(prediction)
 
-def recipe_generator_ingredients(use_case,meal,ingredients, request):
-    st.write("Generating recipe...")
-    with open('app/seeds/recipe_seed_dietary_restrictions.txt') as f:
-        example = f.read()
-    prompt = example +  "\nIngredients on hand:" + ingredients + "\nSpecial Request: " + request + "\nMeal: " + meal 
-    predictions = generate(prompt=prompt, model_size="xlarge",tokens=500,temp=.9, stops=["---"])
-    prediction=max_likely(predictions)
-    return(prediction)
-
-def print_recipe(recipe, day):
-    extraction = extract_text_starting_with_string(recipe, "Directions:")
-    directions = strip_formating_from_string(extraction[1])
-    extraction = extract_text_starting_with_string(extraction[0], "Ingredients:")
-    ingredients= extraction[1]
-    dish=extraction[0]
-    st.header("Recipe " + str(day+1))
-    st.write(dish)
-    st.write(ingredients)
-    st.write(directions)
-def add_recipe_to_dataframe(df, dish, ingredients, directions):
-    df = df.append({'dish': dish, 'ingredients': ingredients, 'directions': directions}, ignore_index=True)
-    return df
-
-def convert_string_to_pdf(string):
-    pdfkit.from_string(string, 'out.pdf')
 
 def print_pdf():
     os.system("out.pdf")
