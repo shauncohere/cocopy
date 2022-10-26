@@ -110,14 +110,16 @@ with st.form("my_form"):
 
 
 if submitted:
-    for num in range(nums):
+    all_gens={}
+    while len(all_gens) != nums:
         with open('prior_seed.txt') as f:
             prior= f.read()
         prompt= "Here are Google ad headlines for a " + company + "." + examples
         generated=generate(prompt=prompt, model_size="xlarge",tokens=25,temp=.9, stops=["----"])
         generated=max_likely(generated)
         generated=generated.replace("----", "")
-        st.write(generated)
+        all_gens.add(generated)
+    st.write(all_gens)
 
 
 
