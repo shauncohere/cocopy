@@ -110,7 +110,7 @@ with st.form("my_form"):
 
 
 if submitted:
-    all_gens={}
+    all_gens=set()
     while len(all_gens) != nums:
         with open('prior_seed.txt') as f:
             prior= f.read()
