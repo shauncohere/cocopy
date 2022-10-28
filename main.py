@@ -103,6 +103,7 @@ st.title("co:copy ad copy generator")
 
 st.write("This AI powered tool generates ad copy. Give it a try!")
 with st.form("my_form"):
+    type=st.selectbox("Type of generation",options=("Headline","Copy"))
     company=st.text_input("What type of company are you?")
     examples=st.text_area("Paste your ad copy examples here seperated by ----")
     nums=st.number_input("How many ad copies would you like to generate?", value=1)
@@ -115,11 +116,19 @@ if submitted:
         while len(all_gens) != nums:
             with open('prior_seed.txt') as f:
                 prior= f.read()
-            prompt= "Here are Google ad headlines for a " + company + "." + examples
-            generated=generate(prompt=prompt, model_size="xlarge",tokens=25,temp=.9, stops=["----"])
+            if type == "Headline":
+                prompt= "Here are Google ad headlines for a " + company + "." + examples
+                tok=25
+            if type== "Copy":
+                prompt= "Generate ad copy for a " + company + "." + examples
+                tok=50
+                model_size="gpt-52b-july-plus-instruct-4"
+            generated=generate(prompt=prompt, model_size="xlarge",tokens=tok,temp=.9, stops=["----"])
             generated=max_likely(generated)
             generated=generated.replace("----", "")
             all_gens.add(generated)
+    df = pd.DataFrame(all_gens, columns=['Ad Copy'])
+    df.to_csv('data/ad_copy.csv', index=False)
     for gen in all_gens:
         st.write(gen)
 
